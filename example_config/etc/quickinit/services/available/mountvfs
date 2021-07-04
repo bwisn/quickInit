@@ -1,0 +1,38 @@
+#!/bin/sh
+
+case "$1" in
+start)
+   if ! mountpoint /run >/dev/null; then
+      mount /run || failed=1
+   fi
+
+   mkdir -p /run/lock /run/shm
+   chmod 1777 /run/shm /run/lock
+
+   if ! mountpoint /proc >/dev/null; then
+      mount -o nosuid,noexec,nodev /proc || failed=1
+   fi
+
+   if ! mountpoint /sys >/dev/null; then
+      mount -o nosuid,noexec,nodev /sys || failed=1
+   fi
+
+   if ! mountpoint /dev >/dev/null; then
+      mount -o mode=0755,nosuid /dev || failed=1
+   fi
+
+   ln -sfn /run/shm /dev/shm
+   ;;
+stop) ;;
+
+restart | reload)
+   "$0" stop
+   "$0" start
+   ;;
+*)
+   echo $"Usage: $0 {start|stop|restart}"
+   exit 1
+   ;;
+esac
+
+exit $?
