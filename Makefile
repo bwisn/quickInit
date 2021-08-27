@@ -7,13 +7,12 @@ INCDIR := inc
 BUILDDIR := obj
 TARGETDIR := bin
 SRCEXT := c
-OBJEXT := o
 
-SOURCES := $(shell find $(SRCDIR) -type f -name *.$(SRCEXT))
-OBJECTS := $(patsubst $(SRCDIR)/%,$(BUILDDIR)/%,$(SOURCES:.$(SRCEXT)=.$(OBJEXT)))
+SOURCES := $(shell find $(SRCDIR) -maxdepth 1 -type f -name *.$(SRCEXT))
+SOURCES_TELINIT := $(shell find $(SRCDIR)/telinit -maxdepth 1 -type f -name *.$(SRCEXT))
 
 #Compiler
-CC=gcc
+CC=$(CROSS_COMPILE)gcc
 
 # Flags for compiler
 CFLAGS := -O2 -Wall 
@@ -23,7 +22,8 @@ CFLAGS += -I $(INCDIR) -lpthread -DQUICKINIT_VERSION=\"$(GIT_VERSION)\"
 
 all: proj
 
-proj: $(BUILDDIR)/init
+proj: $(BUILDDIR)/init $(BUILDDIR)/telinit
+
 
 $(BUILDDIR)/init: $(SOURCES)
 	@mkdir -p $(TARGETDIR)
@@ -32,5 +32,13 @@ $(BUILDDIR)/init: $(SOURCES)
 	@cp $(BUILDDIR)/init $(TARGETDIR)/init
 	@echo Done!
 
+$(BUILDDIR)/telinit: $(SOURCES_TELINIT)
+	@mkdir -p $(TARGETDIR)
+	@mkdir -p $(BUILDDIR)
+	$(CC) $(CFLAGS) $^ -o $@
+	@cp $(BUILDDIR)/telinit $(TARGETDIR)/telinit
+	@echo Done!
+
 clean:
-	rm -f $(BUILDDIR)/*.o $(TARGETDIR)/init $(BUILDDIR)/init
+	rm -f $(BUILDDIR)/*.o $(BUILDDIR)/telinit/*.o $(TARGETDIR)/init \
+	$(BUILDDIR)/init $(TARGETDIR)/telinit $(BUILDDIR)/telinit

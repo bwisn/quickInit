@@ -21,7 +21,7 @@ Example:
 
 ```
 make clean
-make CC="x86_64-linux-musl-gcc"
+make CROSS_COMPILE="x86_64-linux-musl-"
 ```
 
 **Usage**
