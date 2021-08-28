@@ -16,7 +16,7 @@ CC=$(CROSS_COMPILE)gcc
 
 # Flags for compiler
 CFLAGS := -O2 -Wall 
-CFLAGS += -I $(INCDIR) -lpthread -DQUICKINIT_VERSION=\"$(GIT_VERSION)\"
+CFLAGS += -I $(INCDIR) -pthread -DQUICKINIT_VERSION=\"$(GIT_VERSION)\"
 
 .PHONY: proj
 
