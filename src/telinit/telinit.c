@@ -27,7 +27,7 @@ int main(int argc, char** argv) {
         ;
 
     for (uint8_t i = 0; i < sizeof(commandTable) / sizeof(commandTable[0]); i++) {
-        for (int8_t j = optind; j < argc; j++) {
+        for (int j = optind; j < argc; j++) {
             if (strcmp(argv[j], commandTable[i].name) == 0) {
                 optCmdPos = j;        // command position in the argv
                 commandSelected = i;  // number of command from the table
@@ -41,7 +41,7 @@ int main(int argc, char** argv) {
         return EXIT_FAILURE;
     }
 
-    for (uint8_t i = optCmdPos + 1; i < (optCmdPos + commandTable[commandSelected].numArgs); i++) {
+    for (int i = optCmdPos + 1; i < (optCmdPos + commandTable[commandSelected].numArgs); i++) {
         // iterating through needed arguments and setting options
     }
 
